@@ -72,7 +72,7 @@ export default function Navigation({ currentTab, setCurrentTab, userStats, theme
   }}
 >
           <div className="p-2 bg-gradient-to-tr from-blue-600 via-indigo-600 to-violet-600 rounded-lg">
-            <Sparkles className="w-5 h-5 text-white animate-pulse" />
+            <Sparkles className="w-5 h-5 text-white animate-pulse" aria-hidden="true" />
           </div>
           <span className="font-extrabold text-xl bg-gradient-to-r from-blue-400 via-indigo-300 to-violet-400 bg-clip-text text-transparent">
             PrepVerse
@@ -81,7 +81,7 @@ export default function Navigation({ currentTab, setCurrentTab, userStats, theme
         
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-1.5 text-amber-400 text-sm font-bold bg-amber-950/40 px-2 py-1 rounded-full border border-amber-800/30">
-            <Flame className="w-4 h-4 fill-amber-400" />
+            <Flame className="w-4 h-4 fill-amber-400" aria-hidden="true" />
             <span>{userStats.streak}d</span>
           </div>
           <button 
@@ -110,6 +110,8 @@ export default function Navigation({ currentTab, setCurrentTab, userStats, theme
                     setCurrentTab(item.id);
                     setMobileOpen(false);
                   }}
+                  aria-label={`Navigate to ${item.label}${item.highlight ? ', AI powered feature' : ''}`}
+                  aria-current={isActive ? 'page' : undefined}
                   className={`flex items-center justify-between p-4 rounded-xl text-left transition-all ${
                     isActive 
                       ? 'bg-gradient-to-r from-blue-600/30 to-violet-600/20 text-white border-l-4 border-blue-500 font-bold'
@@ -117,7 +119,7 @@ export default function Navigation({ currentTab, setCurrentTab, userStats, theme
                   }`}
                 >
                   <div className="flex items-center gap-3">
-                    <Icon className={`w-5 h-5 ${isActive ? 'text-blue-400' : ''}`} />
+                    <Icon className={`w-5 h-5 ${isActive ? 'text-blue-400' : ''}`} aria-hidden="true" />
                     <span>{item.label}</span>
                   </div>
                   {item.highlight && (
@@ -160,7 +162,7 @@ export default function Navigation({ currentTab, setCurrentTab, userStats, theme
   }}
 >
           <div className="p-2.5 bg-gradient-to-tr from-blue-600 via-indigo-600 to-violet-600 rounded-xl shadow-lg shadow-indigo-900/30">
-            <Sparkles className="w-6 h-6 text-white" />
+            <Sparkles className="w-6 h-6 text-white" aria-hidden="true" />
           </div>
           <div>
             <h1 className="font-black text-2xl bg-gradient-to-r from-blue-400 via-indigo-200 to-violet-300 bg-clip-text text-transparent tracking-tight">
@@ -176,7 +178,7 @@ export default function Navigation({ currentTab, setCurrentTab, userStats, theme
           <div className="flex items-center justify-between mb-3">
             <span className="text-xs text-slate-400 font-medium">Your Standing</span>
             <span className="flex items-center gap-1 text-xs text-amber-400 font-bold bg-amber-950/40 px-2 py-0.5 rounded-full border border-amber-800/30">
-              <Flame className="w-3.5 h-3.5 fill-amber-400" />
+              <Flame className="w-3.5 h-3.5 fill-amber-400" aria-hidden="true" />
               {userStats.streak}d Streak
             </span>
           </div>
@@ -202,6 +204,8 @@ export default function Navigation({ currentTab, setCurrentTab, userStats, theme
               <button
                 key={item.id}
                 onClick={() => setCurrentTab(item.id)}
+                aria-label={`Navigate to ${item.label}${item.highlight ? ', AI powered feature' : ''}`}
+                aria-current={isActive ? 'page' : undefined}
                 className={`flex items-center justify-between px-3 py-2.5 rounded-xl text-left transition-all relative group ${
                   isActive 
                     ? 'bg-slate-900 text-white border-l-2 border-blue-500 font-bold'
@@ -209,7 +213,7 @@ export default function Navigation({ currentTab, setCurrentTab, userStats, theme
                 }`}
               >
                 <div className="flex items-center gap-3">
-                  <Icon className={`w-4.5 h-4.5 transition-colors ${isActive ? 'text-blue-400' : 'group-hover:text-slate-200'}`} />
+                  <Icon className={`w-4.5 h-4.5 transition-colors ${isActive ? 'text-blue-400' : 'group-hover:text-slate-200'}`} aria-hidden="true" />
                   <span className="text-sm font-medium">{item.label}</span>
                 </div>
                 {item.highlight ? (
@@ -217,7 +221,7 @@ export default function Navigation({ currentTab, setCurrentTab, userStats, theme
                     AI
                   </span>
                 ) : (
-                  isActive && <ChevronRight className="w-3.5 h-3.5 text-slate-500" />
+                  isActive && <ChevronRight className="w-3.5 h-3.5 text-slate-500" aria-hidden="true" />
                 )}
               </button>
             );
@@ -228,11 +232,13 @@ export default function Navigation({ currentTab, setCurrentTab, userStats, theme
         <div className="mt-auto pt-4 border-t border-slate-900 flex flex-col gap-3">
           <button
             onClick={() => setCurrentTab('settings')}
+            aria-label="Navigate to Settings"
+            aria-current={currentTab === 'settings' ? 'page' : undefined}
             className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-left text-sm font-medium transition-all ${
               currentTab === 'settings' ? 'bg-slate-900 text-white' : 'text-slate-400 hover:text-white hover:bg-slate-950'
             }`}
           >
-            <SettingsIcon className="w-4.5 h-4.5" />
+            <SettingsIcon className="w-4.5 h-4.5" aria-hidden="true" />
             <span>Settings</span>
           </button>
           
@@ -269,21 +275,22 @@ export default function Navigation({ currentTab, setCurrentTab, userStats, theme
             {/* Quick stats in header */}
             <div className="flex items-center gap-4 text-xs font-semibold bg-slate-900/40 border border-slate-800 px-4 py-2 rounded-xl">
               <div className="flex items-center gap-1.5 text-blue-400">
-                <Code className="w-3.5 h-3.5" />
+                <Code className="w-3.5 h-3.5" aria-hidden="true" />
                 <span>Solved: {userStats.solvedCount}</span>
               </div>
-              <div className="w-px h-4 bg-slate-800" />
+              <div className="w-px h-4 bg-slate-800" aria-hidden="true" />
               <div className="flex items-center gap-1.5 text-indigo-400">
-                <Zap className="w-3.5 h-3.5" />
+                <Zap className="w-3.5 h-3.5" aria-hidden="true" />
                 <span>Goal: {userStats.completedToday}/{userStats.dailyGoal}</span>
               </div>
             </div>
 
             <button 
               onClick={() => setCurrentTab('coach')} 
+              aria-label="Open AI Coach powered by Gemini"
               className="flex items-center gap-2 bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-600 hover:from-blue-500 hover:to-violet-500 text-white text-xs font-extrabold px-4 py-2.5 rounded-xl shadow-lg shadow-indigo-900/30 transition-all transform hover:-translate-y-0.5 cursor-pointer"
             >
-              <Sparkles className="w-3.5 h-3.5 animate-spin-slow" />
+              <Sparkles className="w-3.5 h-3.5 animate-spin-slow" aria-hidden="true" />
               Ask AI Coach
             </button>
           </div>
