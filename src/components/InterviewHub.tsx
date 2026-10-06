@@ -17,7 +17,8 @@ import {
   CheckCircle,
   Clock,
   Terminal,
-  Brain
+  Brain,
+  Share2
 } from 'lucide-react';
 import { interviewQuestions, InterviewQuestion } from '../data/interviewData';
 import { UserStats } from '../types';
@@ -29,7 +30,11 @@ interface InterviewHubProps {
 
 export default function InterviewHub({ userStats, setUserStats }: InterviewHubProps) {
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
-  const [activeQuestion, setActiveQuestion] = useState<InterviewQuestion | null>(null);
+  const [activeQuestion, setActiveQuestion] = useState<InterviewQuestion | null>(() => {
+    const questionId = new URLSearchParams(window.location.search).get('question');
+    return interviewQuestions.find(question => question.id === questionId) ?? null;
+  });
+  const [shareStatus, setShareStatus] = useState<{ questionId: string; message: string } | null>(null);
   
   // Simulated Interview states
   const [userAnswer, setUserAnswer] = useState('');
@@ -62,6 +67,20 @@ export default function InterviewHub({ userStats, setUserStats }: InterviewHubPr
     setUserAnswer('');
     setEvaluationResult(null);
     setErrorText('');
+  };
+
+  const handleShareQuestion = async (question: InterviewQuestion) => {
+    const shareUrl = new URL(window.location.href);
+    shareUrl.searchParams.set('tab', 'interview');
+    shareUrl.searchParams.set('question', question.id);
+
+    try {
+      await navigator.clipboard.writeText(shareUrl.toString());
+      setShareStatus({ questionId: question.id, message: 'Link copied!' });
+    } catch {
+      setShareStatus({ questionId: question.id, message: 'Unable to copy link' });
+    }
+    window.setTimeout(() => setShareStatus(current => current?.questionId === question.id ? null : current), 2500);
   };
 
   const handleEvaluateAnswer = async () => {
@@ -210,14 +229,29 @@ export default function InterviewHub({ userStats, setUserStats }: InterviewHubPr
 
                 <div className="mt-6 pt-4 border-t border-slate-900 flex items-center justify-between">
                   <span className="text-[10px] text-slate-500 font-bold">Duration: 5-Min Prep</span>
-                  <button 
-                    onClick={() => handleStartInterview(q)}
-                    className="flex items-center gap-1 bg-slate-950 hover:bg-blue-600 text-xs font-bold text-slate-200 hover:text-white px-3.5 py-2 rounded-xl border border-slate-900 hover:border-blue-500 transition-all cursor-pointer"
-                  >
-                    Mock Me
-                    <Play className="w-3 h-3 fill-slate-200 group-hover:fill-white" />
-                  </button>
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => handleShareQuestion(q)}
+                      aria-label={`Share question: ${q.question}`}
+                      className="flex items-center gap-1 bg-slate-950 hover:bg-slate-800 text-xs font-bold text-slate-300 hover:text-white px-3 py-2 rounded-xl border border-slate-900 transition-all cursor-pointer"
+                    >
+                      <Share2 className="w-3.5 h-3.5" aria-hidden="true" />
+                      Share
+                    </button>
+                    <button
+                      onClick={() => handleStartInterview(q)}
+                      className="flex items-center gap-1 bg-slate-950 hover:bg-blue-600 text-xs font-bold text-slate-200 hover:text-white px-3.5 py-2 rounded-xl border border-slate-900 hover:border-blue-500 transition-all cursor-pointer"
+                    >
+                      Mock Me
+                      <Play className="w-3 h-3 fill-slate-200 group-hover:fill-white" />
+                    </button>
+                  </div>
                 </div>
+                {shareStatus?.questionId === q.id && (
+                  <p role="status" aria-live="polite" className="mt-2 text-right text-xs text-emerald-400">
+                    {shareStatus.message}
+                  </p>
+                )}
               </div>
             ))}
           </div>

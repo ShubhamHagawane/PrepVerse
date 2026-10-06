@@ -21,7 +21,10 @@ import AdminDashboard from './components/AdminDashboard';
 import OpenSourceMeta from './components/OpenSourceMeta';
 
 export default function App() {
-  const [currentTab, setCurrentTab] = useState<string>('landing');
+  const [currentTab, setCurrentTab] = useState<string>(() => {
+    const params = new URLSearchParams(window.location.search);
+    return params.get('tab') === 'interview' || params.has('question') ? 'interview' : 'landing';
+  });
   const [theme, setTheme] = useState<'dark' | 'light'>('dark');
 
   const [userStats, setUserStats] = useState<UserStats>({
